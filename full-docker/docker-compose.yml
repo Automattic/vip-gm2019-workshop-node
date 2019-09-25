@@ -1,0 +1,54 @@
+version: '3.1'
+services:
+  db:
+    # Database - port 3306
+    image: "mariadb:${MARIADB_VERSION}"
+    restart: always
+    volumes:
+      - ./dbimport:/docker-entrypoint-initdb.d
+      - ./db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS}
+    networks:
+      - vipgonet
+  mem:
+    # Memcached - runs on port 11211
+    image: "memcached:latest"
+    restart: always
+    networks:
+      - vipgonet
+  # TODO: nginx and vip files services, varnish, cli container
+  web:
+    # Web - port 80
+    image: "wordpress:latest"
+    restart: always
+    ports:
+      - "2000:80"
+    volumes:
+      # unlike production, these are mapped individually so local changes take immediate effect
+      # Preserve the entire html dir between builds
+      - ./wp_data:/var/www/html
+      # VIP Go MU Plugins (built version)
+      - ./vip-go-mu-plugins-built:/var/www/html/wp-content/mu-plugins/
+      # Client directories mapped separately to keep in sync
+      # See https://wpvip.com/documentation/vip-go/understanding-your-vip-go-codebase/#what-can-be-put-in-the-vip-repository
+      - ./${CLIENT_DIR}/client-mu-plugins:/var/www/html/wp-content/client-mu-plugins/
+      - ./${CLIENT_DIR}/vip-config:/var/www/html/wp-content/vip-config/
+      - ./${CLIENT_DIR}/themes:/var/www/html/wp-content/themes
+      - ./${CLIENT_DIR}/plugins:/var/www/html/wp-content/plugins
+      - ./${CLIENT_DIR}/languages:/var/www/html/wp-content/languages
+      - ./${CLIENT_DIR}/images:/var/www/html/wp-content/images
+      - ./${CLIENT_DIR}/private:/tmp/private
+      # Uploads directory - TODO: mount to files service instead
+      - ./uploads:/var/www/html/wp-content/uploads
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_PASSWORD=${MYSQL_PASS}
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+     - vipgonet
+networks:
+  vipgonet:

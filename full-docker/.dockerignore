@@ -1,0 +1,10 @@
+# do not copy this to the container
+
+# Git stuff
+.git*
+
+# ignore special files
+.DS_Store
+
+# node non-build items
+node_modules/

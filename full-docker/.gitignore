@@ -1,0 +1,11 @@
+# submodules/ for now
+vip-go-mu-plugins-built
+vip-wordpress-com
+vip-go-skeleton
+
+# environment vars
+.env
+
+# Docker sync dirs
+db_data
+wp_data

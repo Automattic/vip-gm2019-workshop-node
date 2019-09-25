@@ -60,3 +60,38 @@ A complete project is in the [full-desktop](/exercises/full-desktop/) directory.
 
 Run these commands:
 
+
+## Jumping to the end
+
+We'll work backwards and forwards.
+
+We have today just the WP and DB in docker compose.
+
+Soon, we'll add the Node & React client/server code and a Docker file to create the node server image
+
+Also, a starter DB image with a few test posts for the API will be set up, that goes in dbimport when starting up
+
+For now, here are the steps to get WordPress (with no data) up and running
+
+```bash
+$ git clone https://github.com/Automattic/vip-go-skeleton.git
+$ docker-compose up -d
+```
+
+Open localhost:2000 to run WordPress
+
+If the DB was not initialized, this will go through the usual WordPress set up steps.
+
+To shell into the host:
+
+```bash
+$ docker exec -it vipgo_web_1 /bin/bash
+```
+
+To stop:
+
+```bash
+$ docker-compose down
+```
+
+
