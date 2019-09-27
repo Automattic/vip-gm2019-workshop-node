@@ -17,6 +17,21 @@ services:
     restart: always
     networks:
       - vipgonet
+  redis:
+    image: "redis:alpine"
+    networks:
+      - vipgonet
+  node:
+    build:
+      context: ./node
+      args:
+        - NODE_ENV=development
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "4000:4000"
+    networks:
+      - vipgonet
   # TODO: nginx and vip files services, varnish, cli container
   web:
     # Web - port 80
