@@ -74,18 +74,22 @@ Also, a starter DB image with a few test posts for the API will be set up, that 
 For now, here are the steps to get WordPress (with no data) up and running
 
 ```bash
+$ cd full-docker
+$ git clone https://github.com/Automattic/vip-go-mu-plugins-built.git
 $ git clone https://github.com/Automattic/vip-go-skeleton.git
-$ docker-compose up -d
+$ docker-compose up
 ```
 
-Open localhost:2000 to run WordPress
+All the container logs will display in the same window
+Open http://localhost:2000 to run WordPress
+Open http://localhost:4000 to load the Node/React project
 
 If the DB was not initialized, this will go through the usual WordPress set up steps.
 
 To shell into the host:
 
 ```bash
-$ docker exec -it vipgo_web_1 /bin/bash
+$ docker exec -it full-docker_web_1 /bin/bash
 ```
 
 To stop:
