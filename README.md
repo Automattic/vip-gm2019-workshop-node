@@ -81,7 +81,9 @@ $ docker-compose up
 ```
 
 All the container logs will display in the same window
+
 Open http://localhost:2000 to run WordPress
+
 Open http://localhost:4000 to load the Node/React project
 
 If the DB was not initialized, this will go through the usual WordPress set up steps.
