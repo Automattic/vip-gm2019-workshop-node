@@ -14,13 +14,13 @@ services:
       - "8126:8126"
   db:
     # Database - port 3306
-    image: "mariadb:${MARIADB_VERSION}"
+    image: "mariadb:10.1"
     restart: always
     volumes:
       - ./dbimport:/docker-entrypoint-initdb.d
       - ./db_data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS}
+      MYSQL_ROOT_PASSWORD: "demo"
   mem:
     # Memcached - runs on port 11211
     image: "memcached:latest"
@@ -70,7 +70,7 @@ services:
     environment:
       - DD_AGENT_HOST=ddagent
       - WORDPRESS_DB_HOST=db
-      - WORDPRESS_DB_PASSWORD=${MYSQL_PASS}
+      - WORDPRESS_DB_PASSWORD=demo
     depends_on:
       - db
       - ddagent
