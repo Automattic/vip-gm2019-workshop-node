@@ -1,5 +1,17 @@
 version: '3.1'
 services:
+  ddagent:
+    image: datadog/agent:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+    environment:
+      - DD_API_KEY=${DATADOG_API_KEY}
+      - DD_APM_ENABLED=true
+      #- DD_LOG_LEVEL=debug
+    ports:
+      - "8126:8126"
   db:
     # Database - port 3306
     image: "mariadb:${MARIADB_VERSION}"
@@ -9,18 +21,16 @@ services:
       - ./db_data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASS}
-    networks:
-      - vipgonet
   mem:
     # Memcached - runs on port 11211
     image: "memcached:latest"
     restart: always
-    networks:
-      - vipgonet
   redis:
     image: "redis:alpine"
-    networks:
-      - vipgonet
+    volumes:
+      - ./redisdata:/data
+    expose:
+      - 6379
   node:
     build:
       context: ./node
@@ -28,14 +38,15 @@ services:
         - NODE_ENV=development
     environment:
       - NODE_ENV=development
+    links:
+      - redis
     ports:
       - "4000:4000"
-    networks:
-      - vipgonet
   # TODO: nginx and vip files services, varnish, cli container
   web:
     # Web - port 80
-    image: "wordpress:latest"
+    build: .
+    #image: "wordpress:latest"
     restart: always
     ports:
       - "2000:80"
@@ -57,13 +68,9 @@ services:
       # Uploads directory - TODO: mount to files service instead
       - ./uploads:/var/www/html/wp-content/uploads
     environment:
+      - DD_AGENT_HOST=ddagent
       - WORDPRESS_DB_HOST=db
       - WORDPRESS_DB_PASSWORD=${MYSQL_PASS}
     depends_on:
       - db
-    links:
-      - db
-    networks:
-     - vipgonet
-networks:
-  vipgonet:
+      - ddagent
