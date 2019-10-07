@@ -9,3 +9,5 @@ vip-go-skeleton
 # Docker sync dirs
 db_data
 wp_data
+uploads
+redisdata
