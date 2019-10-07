@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/static/css/main.b100e6da.chunk.css",
-    "main.js": "/static/js/main.71b4e015.chunk.js",
-    "main.js.map": "/static/js/main.71b4e015.chunk.js.map",
+    "main.js": "/static/js/main.90e2d742.chunk.js",
+    "main.js.map": "/static/js/main.90e2d742.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.a7ca617d.js",
     "runtime-main.js.map": "/static/js/runtime-main.a7ca617d.js.map",
-    "static/js/2.8473af6f.chunk.js": "/static/js/2.8473af6f.chunk.js",
-    "static/js/2.8473af6f.chunk.js.map": "/static/js/2.8473af6f.chunk.js.map",
+    "static/js/2.e467b962.chunk.js": "/static/js/2.e467b962.chunk.js",
+    "static/js/2.e467b962.chunk.js.map": "/static/js/2.e467b962.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.0cd5c0ac8ee02ef2285cf4e342d1d57f.js": "/precache-manifest.0cd5c0ac8ee02ef2285cf4e342d1d57f.js",
+    "precache-manifest.7d9a2572d1afe8b7cc1b31bea52ea8c1.js": "/precache-manifest.7d9a2572d1afe8b7cc1b31bea52ea8c1.js",
     "service-worker.js": "/service-worker.js",
     "static/css/main.b100e6da.chunk.css.map": "/static/css/main.b100e6da.chunk.css.map",
-    "static/media/logo.svg": "/static/media/logo.25bf045c.svg"
+    "static/media/wpcomvip_logo_main-white.svg": "/static/media/wpcomvip_logo_main-white.cc61dd33.svg"
   }
 }
