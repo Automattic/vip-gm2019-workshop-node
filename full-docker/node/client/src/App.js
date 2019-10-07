@@ -1,4 +1,5 @@
 import React from 'react';
+import DOMPurify from 'dompurify';
 import logo from './wpcomvip_logo_main-white.svg';
 import './App.css';
 import { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } from 'constants';
@@ -13,7 +14,9 @@ function App() {
 
     var items = [];
     resData.data.forEach( item => {
+      // map the complex REST API response to a flatter structure
       items.push({
+        id: item.id,
         title: item.title.rendered,
         image: item._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url,
         caption: item._embedded['wp:featuredmedia'][0].caption.rendered,
@@ -39,33 +42,23 @@ function App() {
           />
           <button
             style={{
-              fontSize: '2rem'
+              fontSize: '2rem',
+              marginBottom: '3rem'
             }}
             onClick={getFoods}>Submit
           </button>
           <br />
           {
             foods.map(food => (
-              <div key={food.title}
-              style={{
-                width: '100%',
-                display: 'flex',
-                marginTop: '0.5em',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}>
+              <div key={food.id}>
                 <img
-                  style={{
-                    borderRadius: '50%',
-                    height: '100%'
-                  }}
                   src={food.image}
-                  alt={food.caption}
+                  alt={food.title}
                 />
                 <div>
-                  <em>{food.caption}</em>
-                  <p><a href="{food.link}">Read More</a></p>
+                  <h3><a href={food.link}>{food.title}</a></h3>
                 </div>
+                <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(food.caption)}}></div>
               </div>
             ))
           }
