@@ -32,17 +32,17 @@ app.use(cors())
 app.use(express.static(path.join(__dirname, '../client/build')))
 
 app.get('/food', async (req, res) => {
-    const count = req.query.count || 10
-    const cacheKey = 'food-' + count
+    const refresh = req.query.refresh || false
+    const cacheKey = 'food'
 
     return client.get(cacheKey, async (err, results) => {
         // return cache hit
-        if (results) {
+        if (results && ! refresh) {
             return res.json({ source: 'cache', data: JSON.parse(results) })
         }
 
         // fetch from API
-        const response = await axios.get(`http://web:80/wp-json/wp/v2/posts?categories=2&_embed=true&per_page=${count}`)
+        const response = await axios.get(`http://web:80/wp-json/wp/v2/posts?categories=2&_embed=true&per_page=100`)
         // save in Redis, expire in an hour
         client.setex(cacheKey, 3600, JSON.stringify(response.data))
         res.json({ source: 'api', data: response.data })
