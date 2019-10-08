@@ -8,11 +8,13 @@ class Items extends React.Component {
         this.state = {items: []};
     }
 
+    // starts a timer that refreshes the items every 1000ms (wasteful, yes)
     componentDidMount() {
         this.timer = setInterval(()=> this.getItems(), 1000);
     }
   
     componentWillUnmount() {
+        clearInterval(this.timer);
         this.timer = null; // here...
     }
 
@@ -32,6 +34,9 @@ class Items extends React.Component {
               })
             })
           this.setState({items: items })
+        })
+        .catch( err => {
+            console.log( 'Fetch error: ', err)
         })
     }
 
