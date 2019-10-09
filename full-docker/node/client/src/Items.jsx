@@ -10,7 +10,7 @@ class Items extends React.Component {
 
     // starts a timer that refreshes the items every 1000ms (wasteful, yes)
     componentDidMount() {
-        this.timer = setInterval(()=> this.getItems(), 1000);
+        this.timer = setInterval(()=> this.getItems(), 3000);
     }
   
     componentWillUnmount() {
@@ -19,15 +19,17 @@ class Items extends React.Component {
     }
 
     getItems() {
-        fetch(`http://localhost:4000/food`)
+        fetch(this.props.nodeUrl + this.props.type)
           .then(result => result.json())
           .then(result => {
             var items = [];
             result.data.forEach( item => {
               // map the complex REST API response to a flatter structure
+              let itemvotes = result.votes[item.id] || 0
               items.push({
                 id: item.id,
                 title: item.title.rendered,
+                votes: itemvotes,
                 image: item._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url,
                 caption: item._embedded['wp:featuredmedia'][0].caption.rendered,
                 link: item._embedded['wp:featuredmedia'][0].link
@@ -50,11 +52,15 @@ class Items extends React.Component {
           {
             this.state.items.map(item => (
               <Item 
+                type={this.props.type}
+                nodeUrl={this.props.nodeUrl}
                 id={item.id}
                 image={item.image}
                 title={item.title}
                 link={item.link}
-                caption={item.caption} />
+                caption={item.caption}
+                votes={item.votes}
+              />
             ))
           }
         </div>

@@ -28,6 +28,13 @@ app.use(express.json())
 app.use(morgan('dev'))
 app.use(cors())
 
+// helper function to get votes from redis and deliver to a callback
+function getVotes(voteKey, callback) {
+    client.hgetall(voteKey, (err, results) => {
+        callback(results)
+    })
+}
+
 // Serve client built files
 app.use(express.static(path.join(__dirname, '../client/build')))
 
@@ -35,18 +42,40 @@ app.get('/food', async (req, res) => {
     const refresh = req.query.refresh || false
     const cacheKey = 'food'
 
-    return client.get(cacheKey, async (err, results) => {
-        // return cache hit
-        if (results && ! refresh) {
-            return res.json({ source: 'cache', data: JSON.parse(results) })
-        }
+    return client.get(cacheKey, (err, results) => {
+        // first fetch votes from Redis with a callback
+        getVotes('vote-' + cacheKey, async function(votes) {
+            // return cache hit
+            if (results && ! refresh) {
+                return res.json({ source: 'cache', votes, data: JSON.parse(results) })
+            }
 
-        // fetch from API
-        const response = await axios.get(`http://web:80/wp-json/wp/v2/posts?categories=2&_embed=true&per_page=100`)
-        // save in Redis, expire in an hour
-        client.setex(cacheKey, 3600, JSON.stringify(response.data))
-        res.json({ source: 'api', data: response.data })
+            // fetch from WP REST API - category 2 == food
+            const response = await axios.get(`http://web:80/wp-json/wp/v2/posts?categories=2&_embed=true&per_page=100`)
+            // save in Redis, expire in an hour
+            client.setex(cacheKey, 3600, JSON.stringify(response.data))
+            res.json({ source: 'api', votes, data: response.data })
+        })
     })
+})
+
+app.post('/vote/:type-:id/:dir', async (req, res ) => {
+    const type = req.params.type || 'food'
+    const id = req.params.id
+    const dir = req.params.dir
+    const voteKey = 'vote-' + type
+    console.log('vote ' + dir + ' for ' + type + ' id ' + id);
+    switch (dir) {
+        case '+':
+            client.hincrby(voteKey, id, 1);
+            break;
+        case '-':
+            client.hincrby(voteKey, id, -1);
+            break;
+        default:
+            // error
+    }
+    
 })
 
 app.get('/ping', (req, res) => {
