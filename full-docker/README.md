@@ -36,6 +36,9 @@ docker-compose up -d --build
 - to shell into the web host
 docker exec -it vipgo_web_1 /bin/bash
 - open localhost:4000 to run the React front-end app (which talks to Node.js, which talks to WordPress)
+- to shell into Redis
+docker exec -it full-docker_redis_1 sh
+/data # redis-cli
 
 ## Commands
 
