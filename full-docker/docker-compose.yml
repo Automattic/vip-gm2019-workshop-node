@@ -1,17 +1,5 @@
 version: '3.1'
 services:
-  ddagent:
-    image: datadog/agent:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /proc/:/host/proc/:ro
-      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
-    environment:
-      - DD_API_KEY=${DATADOG_API_KEY}
-      - DD_APM_ENABLED=true
-      #- DD_LOG_LEVEL=debug
-    ports:
-      - "8126:8126"
   db:
     # Database - port 3306
     image: "mariadb:10.1"
@@ -45,8 +33,7 @@ services:
   # TODO: nginx and vip files services, varnish, cli container
   web:
     # Web - port 80
-    build: .
-    #image: "wordpress:latest"
+    image: "wordpress:latest"
     restart: always
     ports:
       - "2000:80"
@@ -68,9 +55,7 @@ services:
       # Uploads directory - TODO: mount to files service instead
       - ./uploads:/var/www/html/wp-content/uploads
     environment:
-      - DD_AGENT_HOST=ddagent
       - WORDPRESS_DB_HOST=db
       - WORDPRESS_DB_PASSWORD=demo
     depends_on:
       - db
-      - ddagent
