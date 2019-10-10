@@ -19,6 +19,7 @@ class Items extends React.Component {
     }
 
     getItems() {
+        let domain = window.location.hostname
         fetch(this.props.nodeUrl + this.props.type)
           .then(result => result.json())
           .then(result => {
@@ -30,9 +31,9 @@ class Items extends React.Component {
                 id: item.id,
                 title: item.title.rendered,
                 votes: itemvotes,
-                image: item._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url,
-                caption: item._embedded['wp:featuredmedia'][0].caption.rendered,
-                link: item._embedded['wp:featuredmedia'][0].link
+                image: item._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url.replace('localhost',domain),
+                caption: item._embedded['wp:featuredmedia'][0].caption.rendered.replace('localhost',domain),
+                link: item._embedded['wp:featuredmedia'][0].link.replace('localhost',domain)
               })
             })
           this.setState({items: items })

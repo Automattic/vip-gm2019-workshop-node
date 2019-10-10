@@ -11,7 +11,7 @@ function ReactIsInDevelomentMode(){
 
 function App() {
 
-  // when testing, nodeURL may need to be set
+  // when in develop mode, nodeURL may need to be seta to port 4000, in order to talk to the server
   let nodeUrl = window.location.href
   if (ReactIsInDevelomentMode()) {
     // point at the running container exposed on 4000
