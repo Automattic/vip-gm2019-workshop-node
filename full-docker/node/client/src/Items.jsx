@@ -31,7 +31,7 @@ class Items extends React.Component {
                 id: item.id,
                 title: item.title.rendered,
                 votes: itemvotes,
-                image: item._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url.replace('localhost',domain),
+                image: item._embedded['wp:featuredmedia'][0].media_details.sizes.large.source_url.replace('localhost',domain),
                 caption: item._embedded['wp:featuredmedia'][0].caption.rendered.replace('localhost',domain),
                 link: item._embedded['wp:featuredmedia'][0].link.replace('localhost',domain)
               })
@@ -48,7 +48,7 @@ class Items extends React.Component {
 
 
         return (
-        <div>
+        <div className="content">
           <h1>{this.props.title}</h1>
           {
             this.state.items.map(item => (
