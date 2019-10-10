@@ -24,9 +24,10 @@ class Items extends React.Component {
           .then(result => result.json())
           .then(result => {
             var items = [];
+            var votes = result.votes || []; // handle blank slate
             result.data.forEach( item => {
               // map the complex REST API response to a flatter structure
-              let itemvotes = result.votes[item.id] || 0
+              let itemvotes = votes[item.id] || 0
               items.push({
                 id: item.id,
                 title: item.title.rendered,

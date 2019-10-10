@@ -11,6 +11,7 @@ db_data
 wp_data
 uploads
 redisdata
+dbimport
 
 # not yet ready for prime time
 datadog
