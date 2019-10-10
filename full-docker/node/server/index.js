@@ -67,13 +67,19 @@ app.post('/vote/:type-:id/:dir', async (req, res ) => {
     console.log('vote ' + dir + ' for ' + type + ' id ' + id);
     switch (dir) {
         case '+':
-            client.hincrby(voteKey, id, 1);
+            client.hincrby(voteKey, id, 1, (err, result) => {
+                res.json({'ok': dir})
+            });
             break;
         case '-':
-            client.hincrby(voteKey, id, -1);
+            client.hincrby(voteKey, id, -1, (err, result) => {
+                res.json({'ok': dir})
+            });
             break;
         default:
             // error
+            // Note that if a response is not set, either here or in a callback above, the request never finishes!
+            res.json({ error: 'invalid choice'})
     }
     
 })
