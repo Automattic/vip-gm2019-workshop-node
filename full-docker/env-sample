@@ -1,4 +1,0 @@
-MARIADB_VERSION=10.1
-MYSQL_PASS=demo
-CLIENT_DIR=vip-go-skeleton
-
