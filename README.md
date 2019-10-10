@@ -80,7 +80,7 @@ $ ./bin/jumpstart.sh
 
 All the container logs will display in the same window
 
-Open http://localhost:2000 to run WordPress
+Open http://localhost:2000 to run WordPress (user welcome/welcome)
 
 Open http://localhost:4000 to load the Node/React project
 
