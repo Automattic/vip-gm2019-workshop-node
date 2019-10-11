@@ -20,7 +20,7 @@ $ cd vip-gm2019-workshop-node
 
 ## Desktop Exercises
 
-### Exercise 1 - Learn Node.js
+### Setting up Node.js
 
 Install NVM and Node:
 
@@ -34,6 +34,7 @@ Install Node.js LTS
 
 ```bash
 $ nvm install 10
+$ nvm use 10
 $ nvm ls
 ```
 
@@ -44,32 +45,183 @@ $ curl -o- -L https://yarnpkg.com/install.sh | bash
 $ yarn --version
 ```
 
-Create the index.js
+### Exercise 1: Creating a Node.js server: part one
 
-Copy the index.js file in the exercise directory into the server dir, or edit the empty file.
+In this exercise we'll create a Node.js server application that handles one request
 
-### Exercise 2 - Fetch from an API
+Create a new folder and use npm (or yarn) to initialize
 
-Copy the index.js from the ex2 dir or edit the existing file to match.
+```bash
+$ mkdir server
+$ cd server
+$ npm init -y
+# or, with yarn
+$ yarn init -y
+```
+
+Install Express.js
+
+```bash
+# install with npm
+$ npm i express
+# or install with yarn
+$ yarn add express
+```
+
+Create a server.js file (it doesn't need to be named server, but it's more descriptive)
+
+```bash
+$ touch server.js
+```
+
+Copy the contents of [index.js](exercises/ex1-node-server/index.js) in the exercise directory into the new file
+
+```javascript
+// v1 - basic ping/pong demo
+
+const express = require('express')
+const port = 4000
+
+// Express
+const app = express()
+
+// Define a route responding to GET requests for /ping
+app.get('/ping', (req, res) => {
+    return res.send('pong')
+})
+
+// Listen to traffic on a port
+app.listen(port, () => {
+    console.log(`listening on PORT ${port}`)
+})
+```
+
+Execute the file ("run it")
+
+```bash
+$ node server.js
+```
+
+Test it using curl (in another Terminal window), or your browser
+
+```bash
+$ curl http://localhost:4000/ping
+```
+
+To stop the server, press CTRL-C
+
+
+### Exercise 2 - Creating a Node.js server: Part Two
+
+In this exercise we'll add some logging
+
+Install morgan:
+
+```bash
+$ npm i morgan
+# or (yarn)
+$ yarn add morgan
+```
+
+Note that this modifies the package.json file and node_modules directory;
+this happens every time you add/remove a package from your project.
+
+Add morgan to your app
+
+Require it (below the other require statements)
+
+```javascript
+const morgan = require('morgan');
+```
+
+And then after app is created:
+
+```javascript
+app.use( morgan('dev') );
+```
+
+Now run the server again and test it again. You should see each request logged.
+
+If you have any problems, the code updates are in [Exercise 2](exercises/ex1-node-server/index.js)
+
+
+### Exercise 3: Fetching data
+
+This exercise will add a remote request to the project
+
+Install axios and cors:
+
+```bash
+$ npm i axios
+```
+
+Require them in server.js:
+
+```javascript
+const axios = require('axios');
+const cors = require('cors');
+```
+
+Then use cors and json (from Express.js) with the app:
+
+```javascript
+app.use( express.json() )
+app.use( cors() );
+```
+
+Add a /users route:
+
+```javascript
+app.get( '/users', async (req, res) => {
+    const count = req.query.count || 10;
+    const response = await axios.get( ‘https://randomuser.me/api?results=’ + count );
+    res.json( { data: response.data.results } );
+})
+```
+
+Start the server again:
+
+```bash
+$ node server.js
+```
+
+Test using curl or your browser:
+
+```bash
+$ curl localhost:4000/users
+$ curl localhost:4000/users?count=1
+```
+
+
+
+
+
+
+----- EDITS
+
 
 ### Exercise 3 - Create a React app
 
 Install the create-react-app globally
 
-
+#### TK
 
 ### Exercise 4 - Build and serve React with Node.js
 
-### Desktop Exercises Review
+#### TK
+
+## Desktop Exercises Review
 
 A complete project is in the [full-desktop](/exercises/full-desktop/) directory. 
 
 Run these commands:
 
+#### TK
 
 ## Docker exercises
 
-After following the exercises above, here's a complete project.
+This is a complete, working project that we'll go through so you understand what the pieces are,
+and then you can modify and rebuild it
 
 Here are the steps to get the full environment up and running
 
