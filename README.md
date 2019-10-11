@@ -152,7 +152,7 @@ This exercise will add a remote request to the project
 Install axios and cors:
 
 ```bash
-$ npm i axios
+$ npm i axios cors
 ```
 
 Require them in server.js:
