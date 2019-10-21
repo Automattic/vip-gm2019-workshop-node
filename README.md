@@ -317,7 +317,7 @@ app.get( '/users', async ( req, res ) => {
             return res.json({ source: 'cache', data: JSON.parse(results) })
         }
 
-        const response = await axios.get( `https://randomuser.me/api?results=${count}` )
+        const response = await axios.get( 'https://randomuser.me/api?results=${count}' )
 
         client.setex( cacheKey, 3600, JSON.stringify(response.data.results) )
         
