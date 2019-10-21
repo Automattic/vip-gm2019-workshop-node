@@ -1,9 +1,6 @@
 // v1 - basic ping/pong demo
 
 const express = require('express')
-const morgan = require('morgan')
-const cors = require('cors')
-const axios = require('axios')
 
 const port = 4000
 
@@ -11,8 +8,6 @@ const port = 4000
 const app = express()
 
 app.use(express.json())
-app.use(morgan('dev'))
-app.use(cors())
 
 app.get('/ping', (req, res) => {
     return res.send('pong')
