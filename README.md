@@ -236,7 +236,7 @@ Back in the server (or index.js), define the static files to be served:
 
 ```javascript
 // Import the path library
-const path = require( ‘path’ );
+const path = require( 'path' );
 
 // Serve client built files
 app.use( express.static( path.join( __dirname, '../path/build/directory/' ) ) )
