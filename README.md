@@ -197,18 +197,153 @@ $ curl localhost:4000/users?count=1
 
 
 
------ EDITS
-
-
 ### Exercise 3 - Create a React app
 
 Install the create-react-app globally
 
-#### TK
+```bash
+$ yarn global add create-react-app
+// or
+$ npm install -g create-react-app
+
+$ create-react-app myApp
+$ cd myApp
+
+$ yarn start
+// or
+$ npm start
+```
+
+Replace your App.js file with this one:
+
+```bash
+$ cp vip-gm2019-workshop-node/exercises/ex4-react-node/App.js src/App.js
+```
+
+Now if you have the node server running on port 4000, your React project on port 3000 can make requests for users to it.
 
 ### Exercise 4 - Build and serve React with Node.js
 
-#### TK
+Build the app for production
+
+```bash
+$ yarn build
+// or 
+$ npm run build
+```
+
+Back in the server (or index.js), define the static files to be served:
+
+```javascript
+// Import the path library
+const path = require( ‘path’ );
+
+// Serve client built files
+app.use( express.static( path.join( __dirname, '../path/build/directory/' ) ) )
+```
+
+Respond to requests for / with our index file
+
+```javascript
+// map / to serve index.html
+app.get( '/', ( req, res ) => {
+    res.sendFile( 'index.html', {
+        root: path.join( __dirname, '../path/build/directory' ) }
+    );
+} );
+```
+
+Now restart the server:
+
+```bash
+$ node index.js //or server.js
+```
+
+### Exercise 5 - Redis caching
+
+Install redis
+
+```bash
+$ brew install redis
+```
+
+Two ways to start redis:
+
+```bash
+// redis as a backend service (opened automatically after reboot…)
+$ brew services start redis
+
+// redis as a simple service
+$ redis-server /usr/local/etc/redis.conf
+```
+
+Start the cli:
+
+```bash
+$ redis-cli
+> get foo
+(nil)
+> set foo bar
+OK
+> get foo
+"bar"
+> exit
+$
+```
+
+Install redis client to the server project
+
+```bash
+$ npm install redis
+// or
+$ yarn add redis
+```
+
+Require the redis client class and create the client:
+
+```javascript
+const redis = require( 'redis' );
+const client = redis.createClient( 6379 );
+```
+
+Replace the /users route with:
+
+```javascript
+app.get( '/users', async ( req, res ) => {
+    const count = req.query.count || 10;
+    const cacheKey = 'users-' + count;
+    return client.get( cacheKey, async ( err, results ) => {
+        if ( results ) {
+            return res.json({ source: 'cache', data: JSON.parse(results) })
+        }
+
+        const response = await axios.get( `https://randomuser.me/api?results=${count}` )
+
+        client.setex( cacheKey, 3600, JSON.stringify(response.data.results) )
+        
+        res.json( { source: 'api', data: response.data.results } )
+   } )
+} )
+```
+
+Restart your server, and try it:
+
+```bash
+$ curl localhost:4000/users?count=1
+$ curl localhost:4000/users?count=1
+$ curl localhost:4000/users?count=2
+$ curl localhost:4000/users?count=2
+```
+
+The logs should display something like:
+
+```
+GET /users?count=1 200 315.831 ms - 1097
+GET /users?count=1 200 0.964 ms - 1099
+GET /users?count=2 200 135.653 ms - 2148
+GET /users?count=2 200 0.618 ms - 2150
+```
+
 
 ## Desktop Exercises Review
 
