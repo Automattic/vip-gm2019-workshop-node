@@ -174,7 +174,7 @@ Add a /users route:
 ```javascript
 app.get( '/users', async (req, res) => {
     const count = req.query.count || 10;
-    const response = await axios.get( ‘https://randomuser.me/api?results=’ + count );
+    const response = await axios.get( 'https://randomuser.me/api?results=' + count );
     res.json( { data: response.data.results } );
 })
 ```
